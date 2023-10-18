@@ -10,11 +10,29 @@ import { Formik } from 'formik';
 import { userFormSchema } from '../../utiles/yupValidation'
 import DateTimePickerModal from "react-native-modal-datetime-picker"; 
 import Toast from 'react-native-simple-toast'
+import firestore from '@react-native-firebase/firestore';
+import uuid from 'react-native-uuid';
+
+
+
 const AccountSetting = ({navigation}) => {
 
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [Dob, setDob] = useState('Select DOB')
+
+    //login code
+    const loginUser = () => {
+      firestore().collection("users").where("email","==","Dsg@bhh").get().then(res => {
+
+        if(res.docs != []){
+          console.log('save data',JSON.stringify(res.docs[0].data()))
+        }
+       
+      }).catch(err=>{
+        console.log(err)
+      })
+    }
   
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -45,6 +63,14 @@ const AccountSetting = ({navigation}) => {
         ToastAndroid.show(msg,ToastAndroid.SHORT)
       }
 
+
+      const dataSubmit = () => {
+        const userId= uuid.v4()
+        firestore().collection("users").doc(userId).set({
+          name
+        })
+      }
+
   return (
     <View style={styles.mainContainer} >
 
@@ -72,12 +98,26 @@ const AccountSetting = ({navigation}) => {
           
                 showToast('Please select DOB field')
                 // console.warn('Relation select')
-          
+             
             
         }else{
-           var date={...values,DOB:Dob}
-            console.log({date})
+           var data={...values,DOB:Dob}
+            console.log({data})
+           
          
+        const userId= uuid.v4()
+        firestore().collection("users").doc(userId).set({
+          name:data.name,
+          email:data.email,
+          mobile:data.mobile,
+          userid:userId
+        }).then(res=>{
+          console.log("user Created...")
+        }).catch(err=>{
+          console.log(err)
+        })
+     
+
         }
         
         
