@@ -73,10 +73,10 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.ddatingapp"
+    namespace "com.datingchat"
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
-        applicationId "com.ddatingapp"
+        applicationId "com.datingchat"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
