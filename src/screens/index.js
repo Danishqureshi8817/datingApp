@@ -1,6 +1,7 @@
 //Home Stack Screen
 export {default as Splash} from './Splash/Splash';
 export {default as LoginSignup} from './LoginSignup/LoginSignup';
+export {default as SignUp} from './SignUp/SignUp';
 export {default as Home} from './Home/Home';
 export {default as Chat} from './Chat/Chat';
 export {default as Like} from './Like/Like';

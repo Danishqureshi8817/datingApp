@@ -1,26 +1,55 @@
 import { StyleSheet, Text, View,TouchableOpacity,Image,FlatList, TouchableHighlight } from 'react-native'
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import colors from '../../style/colors'
 import imagePaths from '../../constant/imagePaths'
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions'
 import fontsName from '../../style/fontsName'
 import { chatUser } from '../../utiles/data'
 import NavigationString from '../../constant/NavigationString'
+import firestore from '@react-native-firebase/firestore'
+import { getUserDetails } from '../../utiles/services';
 
+let id =''
 const Chat = ({navigation}) => {
+
+  const [usersF, setUsersF] = useState('')
+
+  const getUsers = async() => {
+    let tempData = []
+    let ress = await getUserDetails()
+    let userData = await JSON.parse(ress)
+    id=userData?.userid
+    console.log("Home DAta",userData.name);
+    firestore().collection("users").where("email","!=",userData?.email).get().then(res=>{
+      if(res.docs != []){
+      console.log(res.docs);
+    res.docs.map(item => {
+      tempData.push(item.data())
+    })
+    setUsersF(tempData)}
+    })
+  }
+
+console.log({id});
+
+  useEffect(() => {
+     getUsers()
+  }, [])
 
   const renderItem = ({item,index}) => {
     // const backgroundColor = item.id === selectedId ? '#6e3b6e' : '#f9c2ff';
     // const color = item.id === selectedId ? 'white' : 'black';
 
+  
+
     return (
-      <TouchableHighlight  underlayColor={colors.blackOpacity15}  onPress={()=>{navigation.navigate(NavigationString.ChatScreen,{name:item.name,pro:item.img})}} style={styles.buttonWrapper} >
+      <TouchableHighlight  underlayColor={colors.blackOpacity15}  onPress={()=>{navigation.navigate(NavigationString.ChatScreen,{user:item,id:id})}} style={styles.buttonWrapper} >
           <View style={styles.buttonContentWrapper} >
 
             <View style={{flexDirection:'row',alignItems:'center',gap:responsiveWidth(2)}} >
 
             
-             <Image source={item.img} style={styles.userPro}  />
+             <Image source={require('../../assets/images/user1.jpg')} style={styles.userPro}  />
 
              <View style={styles.userNameWrapper}  >
               <Text style={styles.userName}  >{item.name}</Text>
@@ -49,9 +78,9 @@ const Chat = ({navigation}) => {
 </View>
   
   <FlatList
-        data={chatUser}
+        data={usersF}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={index => index}
       />
 
 
@@ -71,7 +100,7 @@ const styles = StyleSheet.create({
   header:{
     flexDirection:'row',
     marginHorizontal:responsiveWidth(4),
-    marginTop:responsiveHeight(6),
+    marginTop:responsiveHeight(2),
     alignItems:'center',
     marginBottom:responsiveHeight(2)
  
@@ -98,7 +127,8 @@ const styles = StyleSheet.create({
    userPro:{
     resizeMode:'contain',
     width:responsiveWidth(15),
-    height:responsiveHeight(7)
+    height:responsiveHeight(7.5),
+    borderRadius:responsiveWidth(8)
    },
    userName:{
     color:colors.black,

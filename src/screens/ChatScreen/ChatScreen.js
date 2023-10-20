@@ -1,17 +1,50 @@
 import { StyleSheet, Text, View,TouchableOpacity,Image } from 'react-native'
-import React from 'react'
+import React,{useCallback,useState,useEffect} from 'react'
 import colors from '../../style/colors'
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions'
 import imagePaths from '../../constant/imagePaths'
 import fontsName from '../../style/fontsName'
+import { Bubble, GiftedChat } from 'react-native-gifted-chat'
+import firestore from '@react-native-firebase/firestore'
+import uuid from 'react-native-uuid';
 
 const ChatScreen = ({navigation,route}) => {
-    console.log({route});
+    console.log("props",route);
+
+    const [messageList, setMessageList] = useState([])
+
+    useEffect(() => {
+      const querySnapshot = firestore().collection('chats').doc(route.params.id+route.params.user.userid).collection("messages").orderBy("createdAt","desc");
+
+      querySnapshot.onSnapshot(snapShot=> {
+        // console.log(snapShot.docs);
+        const allMessages = snapShot.docs.map(snap => {
+          console.log(snap.data());
+          return {...snap.data(),createdAt:snap.data().createdAt}
+        })
+        setMessageList(allMessages)
+      })
+    }, [])
+  
+    const onSend = messageArray   => {
+      console.log({messageArray});
+      const msg = messageArray[0]
+
+      const myMsg = {
+        ...msg,senderId:route.params.id,recieverId:route.params.user.userid,createdAt:Date.parse(msg.createdAt)
+      }
+
+     setMessageList(previousMessages => 
+      GiftedChat.append(previousMessages,myMsg),
+      )
+
+      firestore().collection("chats").doc(route.params.id+route.params.user.userid).collection('messages').add({...myMsg})
+    }
 
 
   return (
     <View style={styles.mainContainer} >
-         <View style={styles.header} > 
+         {/* <View style={styles.header} > 
 
            
 <TouchableOpacity onPress={()=>{navigation.goBack()}} >
@@ -20,12 +53,29 @@ const ChatScreen = ({navigation,route}) => {
 
    <View style={{flexDirection:'row',alignItems:'center',marginLeft:responsiveWidth(4)}} > 
    <Image source={route?.params?.pro} style={styles.userIcon} />
-   <Text style={styles.headerText} >{route?.params?.name}</Text>
+   <Text style={styles.headerText} >{route?.params?.user.name}</Text>
    </View>
    
-</View>
+</View> */}
   
-
+<GiftedChat
+      messages={messageList}
+      onSend={messages => onSend(messages)}
+      user={{
+        _id: route.params.id,
+      }}
+      renderBubble={props =>{
+           return(
+            <Bubble 
+            {...props}
+            wrapperStyle={{
+              right:{
+                backgroundColor:colors.themeColor
+              }
+            }} />
+           )
+      }}
+    />
 
 
 
@@ -44,7 +94,7 @@ const styles = StyleSheet.create({
       header:{
         flexDirection:'row',
         // marginHorizontal:responsiveWidth(4),
-        marginTop:responsiveHeight(6),
+        marginTop:responsiveHeight(2),
         alignItems:'center',
         marginBottom:responsiveHeight(2),
         borderBottomWidth:1,

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View ,SafeAreaView,ImageBackground,Image,TouchableOpacity,StatusBar} from 'react-native'
+import { StyleSheet, Text, View ,SafeAreaView,ImageBackground,Image,TouchableOpacity,StatusBar, Pressable} from 'react-native'
 import React,{useState,useEffect} from 'react'
 import imagePaths from '../../constant/imagePaths'
 import { wHeight, wWidht } from '../../style/Dimensions'
@@ -9,7 +9,7 @@ import NavigationString from '../../constant/NavigationString'
 import Loader from '../../components/Loader'
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-simple-toast';
-
+import auth from '@react-native-firebase/auth'
 
 const LoginSignup = ({navigation}) => {
 
@@ -20,13 +20,12 @@ const LoginSignup = ({navigation}) => {
     
     const [userInfo, setUserInfo] = useState(null)
 
+   
+
 
     useEffect(() => {
      
 
-        GoogleSignin.configure({
-            webClientId:"271100159197-0r7i8421rq7e09a50a1r8upafh9v3fpt.apps.googleusercontent.com",
-        });
 
     }, [])
 
@@ -44,11 +43,22 @@ const signIn = async () => {
 
     try {
         //  setActivity(true)
-        await GoogleSignin.signOut()
+        // await GoogleSignin.signOut()
+
+        
+        GoogleSignin.configure({
+            webClientId:"967752244038-j62kstjtt08hkmhgus52gcr292o48a0v.apps.googleusercontent.com",
+            offlineAccess: false,
+            scopes:['profile','email'],
+        });
 
 
       await GoogleSignin.hasPlayServices();
       const userData = await GoogleSignin.signIn();
+      const {idToken} = await GoogleSignin.signIn();
+
+      const googleCredentials = auth.GoogleAuthProvider.credential(idToken);
+      auth.signInWithCredential(googleCredentials)
     //   await setUserInfo(userData);
       // await storeData(userInfo)
       console.log("user dat",userData?.user)
@@ -91,14 +101,22 @@ const signIn = async () => {
         <Text style={styles.despText} >Policy and Cookies Policy.</Text>
 
 
-        <TouchableOpacity onPress={()=>{signIn()}} style={styles.buttonWrapper} >
+        <TouchableOpacity onPress={()=>{navigation.navigate(NavigationString.TabStack)}} style={styles.buttonWrapper} >
             <View style={styles.buttonSubWrapper} >
                 <Image source={imagePaths.gIcon} style={styles.gIcon} />
                 <Text style={styles.buttonText} >Login With GOOGLE</Text>
             </View>
         </TouchableOpacity>
+        
+        <View style={{flexDirection:'row',alignSelf:'center',marginTop:responsiveHeight(20)}} >
+            <Text style={{color:colors.white,fontFamily:fontsName.RobotoMedium,fontSize:responsiveFontSize(1.8)}} >Don’t have account? </Text>
+            <Pressable onPress={()=>{navigation.navigate(NavigationString.Signup)}} >
+                <Text style={{color:colors.white,fontFamily:fontsName.RobotoMedium,fontSize:responsiveFontSize(1.8),textDecorationLine:'underline'}} >SignUp</Text>
+            </Pressable>
+        </View>
 
       <Loader visible={Visible} />
+
       </ImageBackground>
      
     </SafeAreaView>

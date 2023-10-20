@@ -4,9 +4,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
 import {responsiveFontSize,responsiveHeight,responsiveWidth} from 'react-native-responsive-dimensions'
-import { AccountSetting, ChatScreen, LoginSignup, Splash  } from '../screens';
+import { AccountSetting, ChatScreen, LoginSignup, SignUp, Splash  } from '../screens';
 import NavigationString from '../constant/NavigationString';
 import TabStack from './TabStack';
+import { getUserDetails } from '../utiles/services';
 
 
 
@@ -26,24 +27,19 @@ const HomeStack = () => {
    await setSplashShow(false)
    }
 
-//    const load = async() => {
-//     Services.getUserAuth().then( resp => {
-//       console.log("mmmain",resp)
-//       if(resp){
-//         setUserData(resp)
-//         console.log("DAT...")
-//         setlogin(false)
-        
-//       }
-//       else{
-//         setUserData(null)
-//       }
-//     })
-//    }
+   const load = async() => {
+    let res = await getUserDetails()
+    let userData = await JSON.parse(res)
+    console.log("DAta",userData?.name);
+
+    if (userData!==null){
+      setlogin(false)
+    }
+   }
 
   useEffect(() => {
     
-//    load()
+   load()
 
     setTimeout( async () => {
       await splashStatus()
@@ -62,7 +58,8 @@ const HomeStack = () => {
      {/* <Stack.Screen name={navigationStrings.Menu} component={Menu} options={{headerShown:true,}} /> */}
      {/* <Stack.Screen name={navigationStrings.Login} component={Login} />
      <Stack.Screen name={navigationStrings.Otp} component={Otp} /> */}
-     <Stack.Screen name={NavigationString.LoginSignup} component={LoginSignup} />
+    {login && <Stack.Screen name={NavigationString.LoginSignup} component={LoginSignup} />}
+    { login && <Stack.Screen name={NavigationString.Signup} component={SignUp} />}
      <Stack.Screen name={NavigationString.TabStack} component={TabStack} />
      <Stack.Screen name={NavigationString.AccountSetting} component={AccountSetting} />
      <Stack.Screen name={NavigationString.ChatScreen} component={ChatScreen} />

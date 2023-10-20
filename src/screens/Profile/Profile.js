@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,StatusBar, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, Text, View,StatusBar, Image, ImageBackground, TouchableOpacity, ScrollView ,PermissionsAndroid} from 'react-native'
 import React,{useState,useCallback} from 'react'
 import colors from '../../style/colors'
 import imagePaths from '../../constant/imagePaths'
@@ -10,13 +10,14 @@ import UserDataBox from '../../components/UserDataBox'
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import NavigationString from '../../constant/NavigationString'
 import ShowMe from '../../components/ShowMe'
-
+import ImagePicker from 'react-native-image-crop-picker';
 
 const Profile = ({navigation}) => {
  
     
   const [visibleShowme, setVisibleShowme] = useState(false);
   const [interested, setinterested] = useState('Select Inerest')
+  const [ImageData, setImageData] = useState(null)
 
   const [kms,setKms]=useState(0)
 
@@ -29,6 +30,59 @@ const Profile = ({navigation}) => {
 //   )
   
 // showInterest()
+
+const requestCameraPermission = async () => {
+  // console.log({imgUri});
+
+  try {
+
+    const granted = await PermissionsAndroid.request( PermissionsAndroid.PERMISSIONS.CAMERA,
+      {
+        title: 'Dating App Camera Permission',
+        message:
+          'Dating App needs access to your Camera ' +
+          'so you can download Dating App.',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+    console.log({granted});
+
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      
+      // downloadFile(imgUri)
+    } else {
+
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+}
+
+ const selectImage = async () => {
+    // await requestCameraPermission()
+
+
+  // const imgRes = await ImagePicker.openPicker({
+  //   width: 300,
+  //   height: 400,
+  //   cropping: true
+  // })
+
+  ImagePicker.openPicker({
+    width: 300,
+    height: 400,
+    cropping: true
+  }).then(imageR => {
+    console.log(imageR);
+  }).catch(err => {
+    console.log({err});
+  })
+  
+
+  // console.log({imgRes});
+ }
 
 
 
@@ -71,7 +125,7 @@ const Profile = ({navigation}) => {
 
    
 
-           <TouchableOpacity onPress={()=>{console.log('Profile click')}} style={{zIndex:1,position:'absolute',marginLeft:responsiveWidth(55),marginTop:responsiveHeight(5)}} >
+           <TouchableOpacity onPress={()=>{selectImage()}} style={{zIndex:1,position:'absolute',marginLeft:responsiveWidth(55),marginTop:responsiveHeight(5)}} >
            <Image source={imagePaths.penciIcon} style={styles.penciIcon} />
            </TouchableOpacity>
 

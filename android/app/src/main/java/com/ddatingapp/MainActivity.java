@@ -1,4 +1,4 @@
-package ddatingapp.com;
+package com.ddatingapp;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

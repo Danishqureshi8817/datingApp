@@ -1,4 +1,4 @@
-package ddatingapp.com;
+package com.ddatingapp;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

@@ -11,16 +11,42 @@ import { wHeight } from '../../style/Dimensions';
 
 const { width, height } = Dimensions.get("screen");
 
+import firestore from '@react-native-firebase/firestore'
+import { getUserDetails } from '../../utiles/services';
+
 export default function App() {
   // State to hold the users data
   const [users,setUsers] = useState(usersArray);
+
+  const [usersF, setUsersF] = useState('')
 
   // Animated values for swipe and tilt
   const swipe = useRef(new Animated.ValueXY()).current;
   const titlSign = useRef(new Animated.Value(1)).current;
 
+  const getUsers = async() => {
+    let tempData = []
+    let ress = await getUserDetails()
+    let userData = await JSON.parse(ress)
+    console.log("Home DAta",userData.email);
+    firestore().collection("users").where("email","!=",'danishqureshi8817@gmail.com').get().then(res=>{
+      if(res.docs != []){
+      console.log(res.docs);
+    res.docs.map(item => {
+      tempData.push(item.data())
+    })
+    setUsersF(tempData)}
+    })
+  }
+console.log({usersF});
+  useEffect(() => {
+     getUsers()
+  }, [])
+  
+
   useEffect(()=>{
     // Reset users data if the array is empty
+     
     if(!users.length){
       setUsers(usersArray);
     }
