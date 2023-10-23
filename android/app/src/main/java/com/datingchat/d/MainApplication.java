@@ -1,4 +1,4 @@
-package com.datingchat;
+package com.datingchat.d;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

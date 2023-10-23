@@ -28,7 +28,7 @@ export default function App() {
     let tempData = []
     let ress = await getUserDetails()
     let userData = await JSON.parse(ress)
-    console.log("Home DAta",userData.email);
+    console.log("Home DAta",userData?.email);
     firestore().collection("users").where("email","!=",'danishqureshi8817@gmail.com').get().then(res=>{
       if(res.docs != []){
       console.log(res.docs);

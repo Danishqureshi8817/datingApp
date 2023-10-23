@@ -19,5 +19,6 @@ export default imagePath = {
     penciIcon:require('../assets/images/pensil.png'),
     arrowleft:require('../assets/images/arrowleft.png'),
     user:require('../assets/images/user1.jpg'),
+    dummyUserIcon:require('../assets/images/dummyUser.jpg'),
 
 }

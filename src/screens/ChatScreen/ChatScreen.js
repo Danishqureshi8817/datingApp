@@ -39,6 +39,7 @@ const ChatScreen = ({navigation,route}) => {
       )
 
       firestore().collection("chats").doc(route.params.id+route.params.user.userid).collection('messages').add({...myMsg})
+      firestore().collection("chats").doc(route.params.user.userid+route.params.id).collection('messages').add({...myMsg})
     }
 
 

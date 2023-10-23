@@ -24,6 +24,7 @@
     "formik": "^2.4.5",
     "react": "18.2.0",
     "react-native": "0.72.5",
+    "react-native-get-location": "^4.0.0",
     "react-native-gifted-chat": "^2.4.0",
     "react-native-image-crop-picker": "^0.40.0",
     "react-native-image-picker": "^7.0.1",

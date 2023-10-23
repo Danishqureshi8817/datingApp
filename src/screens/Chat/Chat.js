@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,TouchableOpacity,Image,FlatList, TouchableHighlight } from 'react-native'
+import { StyleSheet, Text, View,TouchableOpacity,Image,FlatList, TouchableHighlight, SafeAreaView, ImageBackground, ActivityIndicator } from 'react-native'
 import React,{useState,useEffect} from 'react'
 import colors from '../../style/colors'
 import imagePaths from '../../constant/imagePaths'
@@ -14,15 +14,17 @@ const Chat = ({navigation}) => {
 
   const [usersF, setUsersF] = useState('')
 
+  const [imgLoad, setImgLoad] = useState(false)
+
   const getUsers = async() => {
     let tempData = []
     let ress = await getUserDetails()
     let userData = await JSON.parse(ress)
     id=userData?.userid
-    console.log("Home DAta",userData.name);
+    console.log("Chat Screen DAta",userData.name);
     firestore().collection("users").where("email","!=",userData?.email).get().then(res=>{
       if(res.docs != []){
-      console.log(res.docs);
+      // console.log(res.docs);
     res.docs.map(item => {
       tempData.push(item.data())
     })
@@ -39,17 +41,48 @@ console.log({id});
   const renderItem = ({item,index}) => {
     // const backgroundColor = item.id === selectedId ? '#6e3b6e' : '#f9c2ff';
     // const color = item.id === selectedId ? 'white' : 'black';
-
+console.log({item});
   
 
     return (
-      <TouchableHighlight  underlayColor={colors.blackOpacity15}  onPress={()=>{navigation.navigate(NavigationString.ChatScreen,{user:item,id:id})}} style={styles.buttonWrapper} >
+      <TouchableHighlight underlayColor={colors.blackOpacity15}  onPress={()=>{navigation.navigate(NavigationString.ChatScreen,{user:item,id:id})}} style={styles.buttonWrapper} >
           <View style={styles.buttonContentWrapper} >
 
             <View style={{flexDirection:'row',alignItems:'center',gap:responsiveWidth(2)}} >
 
-            
-             <Image source={require('../../assets/images/user1.jpg')} style={styles.userPro}  />
+{/*             
+            {
+              item.profile==''?
+              <Image 
+        
+              source={require('../../assets/images/user1.jpg')} style={styles.userPro}  /> :
+
+                <View style={{  width:responsiveWidth(15),
+    height:responsiveHeight(7.5),
+    borderRadius:responsiveWidth(8),overflow:'hidden'}}>
+
+                 
+               <ImageBackground
+               onLoadStart={()=>{setImgLoad(true)}}
+               onLoadEnd={()=>{setImgLoad(false)}}
+              source={{uri:item.profile}}  style={[styles.userPro,{justifyContent:'center',alignItems:'center'}]}  >
+                  
+                  <ActivityIndicator animating={imgLoad} size={'large'} />
+
+              </ImageBackground>
+              </View> 
+            } */}
+
+
+            <Image 
+        
+        source={imagePaths.dummyUserIcon} style={styles.userPro}  /> 
+
+
+             {/* <Image 
+               onLoadStart={()=>{setImgLoad(true)}}
+               onLoadEnd={()=>{setImgLoad(false)}}
+              source={item.profile==''?require('../../assets/images/user1.jpg'):{uri:'https://firebasestorage.googleapis.com/v0/b/dating-app-14182.appspot.com/o/1000027433.jpg?alt=media&token=e3739460-ecc4-44ac-a6d3-102419b1050e'}} style={styles.userPro}  /> */}
 
              <View style={styles.userNameWrapper}  >
               <Text style={styles.userName}  >{item.name}</Text>
@@ -65,7 +98,7 @@ console.log({id});
   };
 
   return (
-    <View style={styles.mainContainer} >
+    <SafeAreaView style={styles.mainContainer} >
          <View style={styles.header} > 
 
            
@@ -80,12 +113,12 @@ console.log({id});
   <FlatList
         data={usersF}
         renderItem={renderItem}
-        keyExtractor={index => index}
+        keyExtractor={ item => item?.userid}
       />
 
+    {imgLoad&&<Text>djfsj</Text>}
 
-
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -100,7 +133,7 @@ const styles = StyleSheet.create({
   header:{
     flexDirection:'row',
     marginHorizontal:responsiveWidth(4),
-    marginTop:responsiveHeight(2),
+    marginTop:responsiveHeight(4),
     alignItems:'center',
     marginBottom:responsiveHeight(2)
  
@@ -128,7 +161,8 @@ const styles = StyleSheet.create({
     resizeMode:'contain',
     width:responsiveWidth(15),
     height:responsiveHeight(7.5),
-    borderRadius:responsiveWidth(8)
+    borderRadius:responsiveWidth(8),
+    
    },
    userName:{
     color:colors.black,

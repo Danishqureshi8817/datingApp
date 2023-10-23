@@ -466,7 +466,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.datingchat";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.datingchat.d";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DatingChat.app/DatingChat";
 			};
@@ -490,7 +490,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.datingchat";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.datingchat.d";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DatingChat.app/DatingChat";
 			};
@@ -516,7 +516,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.datingchat";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.datingchat.d";
 				PRODUCT_NAME = "DatingChat";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -543,7 +543,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.datingchat";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.datingchat.d";
 				PRODUCT_NAME = "DatingChat";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

@@ -24,7 +24,12 @@ const LoginSignup = ({navigation}) => {
 
 
     useEffect(() => {
-     
+         
+      GoogleSignin.configure({
+        webClientId:"343194354249-hmqojqgbcpnd1phq7jopbecfhqffc0n2.apps.googleusercontent.com",
+        offlineAccess: false,
+        scopes:['profile','email'],
+    });
 
 
     }, [])
@@ -45,20 +50,15 @@ const signIn = async () => {
         //  setActivity(true)
         // await GoogleSignin.signOut()
 
-        
-        GoogleSignin.configure({
-            webClientId:"967752244038-j62kstjtt08hkmhgus52gcr292o48a0v.apps.googleusercontent.com",
-            offlineAccess: false,
-            scopes:['profile','email'],
-        });
+    
 
 
       await GoogleSignin.hasPlayServices();
       const userData = await GoogleSignin.signIn();
       const {idToken} = await GoogleSignin.signIn();
 
-      const googleCredentials = auth.GoogleAuthProvider.credential(idToken);
-      auth.signInWithCredential(googleCredentials)
+      // const googleCredentials = auth.GoogleAuthProvider.credential(idToken);
+      // auth.signInWithCredential(googleCredentials)
     //   await setUserInfo(userData);
       // await storeData(userInfo)
       console.log("user dat",userData?.user)
@@ -101,7 +101,7 @@ const signIn = async () => {
         <Text style={styles.despText} >Policy and Cookies Policy.</Text>
 
 
-        <TouchableOpacity onPress={()=>{navigation.navigate(NavigationString.TabStack)}} style={styles.buttonWrapper} >
+        <TouchableOpacity onPress={()=>{}} style={styles.buttonWrapper} >
             <View style={styles.buttonSubWrapper} >
                 <Image source={imagePaths.gIcon} style={styles.gIcon} />
                 <Text style={styles.buttonText} >Login With GOOGLE</Text>

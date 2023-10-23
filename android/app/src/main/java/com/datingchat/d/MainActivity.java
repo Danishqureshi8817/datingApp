@@ -1,4 +1,4 @@
-package com.datingchat;
+package com.datingchat.d;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

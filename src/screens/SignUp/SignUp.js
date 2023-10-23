@@ -54,7 +54,7 @@ const SignUp = ({navigation}) => {
         console.log({x});
         const x1 = x[0].split('-');
         console.log(x1[2] + '/' + x1[1] + '/'+ x1[0]);
-        setDob(x1[2] + '/' + x1[1] + '/'+ x1[0])
+        setDob(x1[2] + '-' + x1[1] + '-'+ x1[0])
     
     
         hideDatePicker();
@@ -74,7 +74,7 @@ const SignUp = ({navigation}) => {
 
            setUserDetails(res.docs[0]?.data())
             goToNext(res.docs[0].data())
-            setVisible(false)
+          
           }else{
             setVisible(false)
             showToast('User not found,please Email/password..')
@@ -92,6 +92,8 @@ const SignUp = ({navigation}) => {
          await showToast('Login Successfully')
          console.log('saved AsynStorage',res);
          navigation.navigate(NavigationString.TabStack)
+
+        await setVisible(false)
       }
 
 
@@ -121,11 +123,13 @@ const SignUp = ({navigation}) => {
         email:'',
         mobile:'',
         password:'',
-        cpassword:''
+        cpassword:'',
+     
        
       }} validationSchema={userFormSchema} 
        
-       onSubmit={values => {
+       onSubmit={(values,formikActions) => {
+        setVisible(true)
         // console.log({values})
         if( Dob === 'DD/MM/YYYY' || Dob == null){
             showToast('Please select DOB field')
@@ -148,9 +152,20 @@ const SignUp = ({navigation}) => {
           password:data.cpassword,
           gender:data.gender,
           dob:data.dob,
-          userid:userId
+          userid:userId,
+          profile:'',
+          chatlist:[],
+          interset:'',
+          location:''
         }).then(res=>{
+           setVisible(false)
             showToast("SignUp Successfully..")
+            formikActions.resetForm()
+            setDob('DD/MM/YYYY')
+            setSelectedGender(null)
+            setHideCP(true)
+            setHideP(true)
+            
           console.log("user Created...")
         }).catch(err=>{
           console.log(err)
@@ -165,7 +180,7 @@ const SignUp = ({navigation}) => {
         }}
        >
 
-      {({values,errors,touched,handleSubmit,handleChange,setFieldTouched,isValid})=>(
+      {({values,errors,touched,handleSubmit,handleChange,setFieldTouched,isValid,resetForm})=>(
 
         <>
 
@@ -194,7 +209,7 @@ const SignUp = ({navigation}) => {
          { touched.mobile && errors.mobile && (<Text style={{color:'red',marginLeft:responsiveWidth(10),marginBottom:responsiveHeight(2),}}>{errors.mobile}</Text>)}
          
          <View style={styles.dateWrapper} >
-
+         
             <Text  style={[styles.dateText,{color:Dob=='DD/MM/YYYY'?colors.blackOpacity15:colors.black}]}>{Dob}</Text>
             
             <TouchableOpacity onPress={()=>{showDatePicker()}} >
